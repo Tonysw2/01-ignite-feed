@@ -7,7 +7,10 @@ import { Comment } from './Comment';
 import styles from './Post.module.css';
 
 export const Post = function ({ author, content, publishedAt }) {
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState([
+    { text: 'Well done bro!', id: uuidv4() },
+  ]);
+
   const [newCommentText, setNewCommentText] = useState('');
 
   const publishedDateFormatted = format(
