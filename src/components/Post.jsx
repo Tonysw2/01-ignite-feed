@@ -7,7 +7,7 @@ import { Comment } from './Comment';
 import styles from './Post.module.css';
 
 export const Post = function ({ author, content, publishedAt }) {
-  const [comments, setComments] = useState(['Post muito massa man!!']);
+  const [comments, setComments] = useState([]);
   const [newCommentText, setNewCommentText] = useState('');
 
   const publishedDateFormatted = format(
@@ -24,13 +24,23 @@ export const Post = function ({ author, content, publishedAt }) {
     event.preventDefault();
     if (newCommentText.trim().length === 0) return;
     setComments((prev) => {
-      return [...prev, newCommentText];
+      return [...prev, { text: newCommentText, id: uuidv4() }];
     });
     setNewCommentText('');
   };
 
   const handleNewCommentChange = function () {
     setNewCommentText(event.target.value);
+  };
+
+  const deleteComment = function (id) {
+    setComments((prev) => {
+      const updatedComments = prev.filter((comment) => {
+        return comment.id !== id;
+      });
+
+      return updatedComments;
+    });
   };
 
   return (
@@ -81,7 +91,14 @@ export const Post = function ({ author, content, publishedAt }) {
 
       <div className={styles.commentList}>
         {comments.map((comment) => {
-          return <Comment key={uuidv4()} content={comment} />;
+          return (
+            <Comment
+              key={uuidv4()}
+              content={comment.text}
+              onDeleteComment={deleteComment}
+              id={comment.id}
+            />
+          );
         })}
       </div>
     </article>
